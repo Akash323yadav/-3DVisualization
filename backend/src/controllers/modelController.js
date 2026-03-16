@@ -5,6 +5,8 @@ const uploadModel = async (req, res) => {
         const file = req.file;
         if (!file) return res.status(400).json({ message: 'No file uploaded' });
 
+        console.log(`[Storage] Processing: ${file.originalname}`);
+
         const newModel = new Model({
             name: req.body.name || file.originalname,
             fileUrl: file.location,
@@ -14,7 +16,8 @@ const uploadModel = async (req, res) => {
         await newModel.save();
         res.status(201).json(newModel);
     } catch (error) {
-        res.status(500).json({ message: 'Server error' });
+        console.error('[Backend Error]:', error.message);
+        res.status(500).json({ message: 'Error: ' + error.message });
     }
 };
 
